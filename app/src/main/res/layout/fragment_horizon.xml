@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.baoyz.widget.PullRefreshLayout
+        android:id="@+id/horizon_pullRefresh"
+        app:refreshType="smartisan"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <icmod.wvt.com.icmod.others.AnimatedExpandableListView
+            android:id="@+id/expand_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@null"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+             />
+    </com.baoyz.widget.PullRefreshLayout>
+
+</LinearLayout>

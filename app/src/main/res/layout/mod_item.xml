@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:gravity="center">
+    <com.google.android.material.card.MaterialCardView
+        app:cardCornerRadius="7dp"
+        android:id="@+id/CardView"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="4dp"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:checkable="true"
+        app:rippleColor="@color/select_color"
+        app:checkedIcon="@null"
+        app:cardElevation="4dp"
+        app:cardMaxElevation="8dp"
+        >
+        <RelativeLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent">
+
+            <RelativeLayout
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="96dp"
+                android:id="@+id/relativelayout"
+                android:layout_marginTop="16dp">
+
+                <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:textSize="24dp"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:paddingRight="5dp"
+                    android:id="@+id/itemsettingTextView1"
+                    android:textStyle="bold"
+                    android:textColor="#de000000"/>
+
+                <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:textSize="14dp"
+                    android:paddingRight="7dp"
+                    android:id="@+id/itemsettingTextView2"
+                    android:layout_below="@id/itemsettingTextView1"
+                    android:textColor="#99000000"/>
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="top|right"
+                android:layout_alignParentEnd="true"
+                android:id="@+id/itemsettingLinearLayout1">
+
+                <ImageView
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:id="@+id/itemsettingImageView1"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="left"
+                android:layout_below="@id/relativelayout">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/itemsettingButton1"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/design_default_color_primary"
+                    android:text="@string/info" />
+
+                <com.google.android.material.button.MaterialButton
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="@string/delete"
+                    android:textColor="@color/design_default_color_primary"
+                    android:id="@+id/itemsettingButton2"/>
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/switch1"
+                    app:useMaterialThemeColors="false"
+                    android:checked="true"
+                    />
+
+
+
+            </LinearLayout>
+
+        </RelativeLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+</LinearLayout>
+

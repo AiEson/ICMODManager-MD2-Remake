@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_gravity="center"
+    android:padding="16dp">
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:gravity="left">
+            
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="36dp"
+                android:layout_gravity="center"
+                android:src="@drawable/baseline_select_all_black_36dp"
+                />
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="match_parent"
+                android:minHeight="36dp"
+                android:layout_height="wrap_content"
+                android:text="全部选择"
+                android:id="@+id/mod_select_all"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:textColor="@android:color/black"
+                android:gravity="center|start"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_gravity="center"
+                android:layout_height="36dp"
+                android:src="@drawable/baseline_all_out_black_36dp"
+                />
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="match_parent"
+                android:id="@+id/mod_select_cancel"
+                android:minHeight="36dp"
+                android:layout_height="wrap_content"
+                android:text="全不选"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:textColor="@android:color/black"
+                android:gravity="center|start"
+                />
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/mod_select_layout_middle"
+        android:layout_marginTop="8dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:id="@+id/mod_select_layout_enable"
+            android:gravity="left">
+
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_gravity="center"
+                android:layout_height="36dp"
+                android:src="@drawable/baseline_check_circle_outline_black_36dp"
+                />
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="match_parent"
+                android:minHeight="36dp"
+                android:layout_height="wrap_content"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:textColor="@android:color/black"
+                android:text="启用所选"
+                android:id="@+id/mod_select_enable"
+                android:gravity="center|start"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/mod_select_layout_disable"
+            android:layout_weight="1">
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_gravity="center"
+                android:layout_height="36dp"
+                android:src="@drawable/baseline_highlight_off_black_36dp"
+                />
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="match_parent"
+                android:minHeight="36dp"
+                android:layout_height="wrap_content"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:textColor="@android:color/black"
+                android:text="禁用所选"
+                android:id="@+id/mod_select_disable"
+                android:gravity="center|start"/>
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:gravity="left">
+
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_gravity="center"
+                android:layout_height="36dp"
+                android:src="@drawable/baseline_delete_outline_black_36dp"
+                />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/mod_select_delete"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="match_parent"
+                android:minHeight="36dp"
+                android:layout_height="wrap_content"
+                android:gravity="center|start"
+                android:text="删除所选"
+                android:textColor="@android:color/black" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_gravity="center"
+                android:layout_height="36dp"
+                android:src="@drawable/ic_menu_share"
+                />
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="match_parent"
+                android:minHeight="36dp"
+                android:layout_height="wrap_content"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:text="打包并分享"
+                android:textColor="@android:color/black"
+                android:id="@+id/mod_select_share"
+                android:gravity="center|start"/>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:theme="@style/AppTheme.NoActionBar"
+    android:id="@+id/forumfragment_root_layout"
+    android:orientation="vertical">
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:max="100"
+            android:progressDrawable="@drawable/pg_bar_drawable"/>
+
+
+        <icmod.wvt.com.icmod.others.LollipopFixedWebView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/forum" />
+
+</LinearLayout>

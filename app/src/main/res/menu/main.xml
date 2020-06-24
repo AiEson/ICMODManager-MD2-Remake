@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".MainActivity">
+
+    <item android:id="@+id/search"
+        android:icon="@drawable/baseline_search_white_24dp"
+        app:showAsAction="always"
+        android:title="@string/app_name"
+        app:actionViewClass="android.widget.SearchView"
+        />
+    <item
+        android:id="@+id/download_hzpack"
+        android:title="在线下载Horizon包"
+        android:icon="@drawable/ic_vertical_align_bottom_white_24dp"
+        app:showAsAction="always"/>
+</menu>

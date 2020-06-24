@@ -1,0 +1,20 @@
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="settings"
+        android:enabled="true"
+        android:icon="@drawable/ic_settings_24px"
+        android:shortcutShortLabel="@string/settings"
+        android:shortcutLongLabel="@string/settings">
+
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="icmod.wvt.com.icmod"
+            android:targetClass="icmod.wvt.com.icmod.ui.OpenActivity" />
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="icmod.wvt.com.icmod"
+            android:targetClass="icmod.wvt.com.icmod.ui.SettingsActivity" />
+
+        <categories android:name="android.shortcut.conversation"/>
+    </shortcut>
+</shortcuts>

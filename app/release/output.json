@@ -1,0 +1,18 @@
+{
+  "version": 2,
+  "artifactType": {
+    "type": "APK",
+    "kind": "Directory"
+  },
+  "applicationId": "icmod.wvt.com.icmod",
+  "variantName": "processReleaseResources",
+  "elements": [
+    {
+      "type": "SINGLE",
+      "filters": [],
+      "versionCode": 21,
+      "versionName": "1.8-行-2",
+      "outputFile": "app-release.apk"
+    }
+  ]
+}
