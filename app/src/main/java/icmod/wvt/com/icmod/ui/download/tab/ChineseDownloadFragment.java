@@ -75,8 +75,8 @@ public class ChineseDownloadFragment extends Fragment {
                     if (!jsonObject.getString("state").equals("1"))
                         continue;
                     String name = jsonObject.getString("name");
-                    String description = jsonObject.getString("info");
-                    OnlineMOD onlineMOD = new OnlineMOD("http://www.innercorehhz.cf/hhz/download.php" + "?id=" + ((jsonObject.getInt("id")) - 5000), FinalValuable.ICHhzUrl + "mods/已通过/icon/" + jsonObject.getString("icon"), name, description, FinalValuable.OnlineHhz);
+                    String description = jsonObject.getString("absrtact");
+                    OnlineMOD onlineMOD = new OnlineMOD("https://dev.adodoz.cn/api/mod/download" + "?id=" + jsonObject.getInt("id"), FinalValuable.ICHhzUrl + jsonObject.getString("icon"), name, description, FinalValuable.OnlineHhz);
                     onlineMODList.add(onlineMOD);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -192,7 +192,7 @@ public class ChineseDownloadFragment extends Fragment {
                     }
 
                     mainActivity.runOnUiThread(() -> {
-                        if (viewHolder.imageView != null && bitmap != null && viewHolder.imageView.getTag().toString() == getItem(position).getImageUrl()) {
+                        if (viewHolder.imageView != null && bitmap != null && viewHolder.imageView.getTag().toString().equals(getItem(position).getImageUrl())) {
                             BitmapDrawable drawable = new BitmapDrawable(bitmap);
                             drawable.getPaint().setFilterBitmap(false);
                             viewHolder.imageView.setImageDrawable(drawable);
@@ -206,79 +206,94 @@ public class ChineseDownloadFragment extends Fragment {
                 viewHolder.textView1.setText(mod.getName());
             viewHolder.button1.setOnClickListener(v -> {
                 final ProgressDialog progressDialog = new ProgressDialog(mainActivity);
-                progressDialog.setMessage("下载正在开始...请稍等");
+                progressDialog.setMessage("正在分析下载链接...请稍等");
                 progressDialog.setCancelable(false);
                 progressDialog.show();
-                Log.e("TAG", getItem(position).getModUrl());
-                FileDownloader.getImpl().create(getItem(position).getModUrl()).setPath(FinalValuable.DownLoadPath + File.separator + getItem(position).getName() + ".icmod")
-                        .setListener(new FileDownloadLargeFileListener() {
-                            @Override
-                            protected void pending(BaseDownloadTask task, long soFarBytes, long totalBytes) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            String realDownUrl = FinalValuable.ICHhzUrl + new JSONObject(Algorithm.Get(getItem(position).getModUrl(), "", false)).getJSONObject("data").getString("url");
+                            mainActivity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    FileDownloader.getImpl().create(realDownUrl).setPath(FinalValuable.DownLoadPath + File.separator + getItem(position).getName() + ".icmod")
+                                            .setListener(new FileDownloadLargeFileListener() {
+                                                @Override
+                                                protected void pending(BaseDownloadTask task, long soFarBytes, long totalBytes) {
 
-                            }
+                                                }
 
-                            @Override
-                            protected void progress(BaseDownloadTask task, long soFarBytes, long totalBytes) {
-                                if (totalBytes == -1)
-                                    progressDialog.setMessage("已下载：" + Algorithm.readableFileSize(soFarBytes));
-                                else
-                                    progressDialog.setMessage("已下载：" + Algorithm.readableFileSize(soFarBytes) + "  " + Algorithm.getPercent(soFarBytes, totalBytes));
-                            }
+                                                @Override
+                                                protected void progress(BaseDownloadTask task, long soFarBytes, long totalBytes) {
+                                                    if (totalBytes == -1)
+                                                        progressDialog.setMessage("已下载：" + Algorithm.readableFileSize(soFarBytes));
+                                                    else
+                                                        progressDialog.setMessage("已下载：" + Algorithm.readableFileSize(soFarBytes) + "  " + Algorithm.getPercent(soFarBytes, totalBytes));
+                                                }
 
-                            @Override
-                            protected void paused(BaseDownloadTask task, long soFarBytes, long totalBytes) {
+                                                @Override
+                                                protected void paused(BaseDownloadTask task, long soFarBytes, long totalBytes) {
 
-                            }
+                                                }
 
-                            @Override
-                            protected void completed(BaseDownloadTask task) {
-                                new Thread(() -> {
-                                    if (Algorithm.autoInstall(FinalValuable.DownLoadPath + File.separator + getItem(position).getName() + ".icmod") != 0) {
-                                        mainActivity.runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                print("安装成功", Snackbar.LENGTH_SHORT);
-                                                progressDialog.dismiss();
-                                                try {
-                                                    modList.remove(position);
-                                                    notifyDataSetChanged();
-                                                } catch (Exception e) {
+                                                @Override
+                                                protected void completed(BaseDownloadTask task) {
+                                                    new Thread(() -> {
+                                                        if (Algorithm.autoInstall(FinalValuable.DownLoadPath + File.separator + getItem(position).getName() + ".icmod") != 0) {
+                                                            mainActivity.runOnUiThread(new Runnable() {
+                                                                @Override
+                                                                public void run() {
+                                                                    print("安装成功", Snackbar.LENGTH_SHORT);
+                                                                    progressDialog.dismiss();
+                                                                    try {
+                                                                        modList.remove(position);
+                                                                        notifyDataSetChanged();
+                                                                    } catch (Exception e) {
+                                                                        e.printStackTrace();
+                                                                    }
+
+                                                                }
+                                                            });
+                                                        } else {
+                                                            progressDialog.dismiss();
+                                                            try {
+                                                                Algorithm.copyFile(FinalValuable.DownLoadPath + File.separator + getItem(position).getName() + ".icmod", Environment.getExternalStorageDirectory().toString() + File.separator + "Download" + File.separator + getItem(position).getName() + ".icmod");
+                                                                mainActivity.runOnUiThread(new Runnable() {
+                                                                    @Override
+                                                                    public void run() {
+                                                                        print("安装失败，已保存" + getItem(position).getName() + ".icmod在" + "Download目录下，请尝试手动安装", Snackbar.LENGTH_LONG);
+                                                                    }
+                                                                });
+                                                            } catch (Exception e) {
+                                                                e.printStackTrace();
+                                                            }
+
+                                                        }
+                                                    }).start();
+
+                                                }
+
+                                                @Override
+                                                protected void error(BaseDownloadTask task, Throwable e) {
+                                                    progressDialog.dismiss();
+                                                    print("下载失败", Snackbar.LENGTH_SHORT);
                                                     e.printStackTrace();
                                                 }
 
-                                            }
-                                        });
-                                    } else {
-                                        progressDialog.dismiss();
-                                        try {
-                                            Algorithm.copyFile(FinalValuable.DownLoadPath + File.separator + getItem(position).getName() + ".icmod", Environment.getExternalStorageDirectory().toString() + File.separator + "Download" + File.separator + getItem(position).getName() + ".icmod");
-                                            mainActivity.runOnUiThread(new Runnable() {
                                                 @Override
-                                                public void run() {
-                                                    print("安装失败，已保存" + getItem(position).getName() + ".icmod在" + "Download目录下，请尝试手动安装", Snackbar.LENGTH_LONG);
+                                                protected void warn(BaseDownloadTask task) {
+
                                                 }
-                                            });
-                                        } catch (Exception e) {
-                                            e.printStackTrace();
-                                        }
+                                            }).start();
+                                }
+                            });
+                        } catch (IOException | JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }).start();
 
-                                    }
-                                }).start();
-
-                            }
-
-                            @Override
-                            protected void error(BaseDownloadTask task, Throwable e) {
-                                progressDialog.dismiss();
-                                print("下载失败", Snackbar.LENGTH_SHORT);
-                                e.printStackTrace();
-                            }
-
-                            @Override
-                            protected void warn(BaseDownloadTask task) {
-
-                            }
-                        }).start();
             });
             viewHolder.button2.setOnClickListener(v -> {
                 Intent intent = new Intent(

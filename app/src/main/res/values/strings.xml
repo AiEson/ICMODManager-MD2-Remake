@@ -29,7 +29,7 @@
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
     <string name="password">密码</string>
-    <string name="email">邮箱地址</string>
+    <string name="email">用户名/邮箱</string>
     <string name="delete">删除</string>
     <string name="info">详情</string>
     <string name="file_choose">文件选择</string>

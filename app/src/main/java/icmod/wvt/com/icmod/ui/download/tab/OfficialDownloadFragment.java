@@ -78,7 +78,7 @@ public class OfficialDownloadFragment extends Fragment {
                     jsonObject = FinalValuable.jsonArrayGw.getJSONObject(i);
                     String name = jsonObject.getString("title");
                     String description = jsonObject.getString("description");
-                    OnlineMOD onlineMOD = new OnlineMOD(FinalValuable.ICCNUrl + "mods/" + jsonObject.getInt("id"), FinalValuable.ICCNUrl + "mods/img/" + jsonObject.getString("icon"), name, description, FinalValuable.OnlineGf);
+                    OnlineMOD onlineMOD = new OnlineMOD(FinalValuable.ICCNUrl + "mods/" + jsonObject.getInt("id") + ".zip", FinalValuable.ICCNUrl + "mods/img/" + jsonObject.getString("icon"), name, description, FinalValuable.OnlineGf);
                     boolean isHave = false;
                     for (int j = 0; j < modList.size(); j++) {
                         if (modList.get(j).getName() != null && modList.get(j).getName().equals(name))

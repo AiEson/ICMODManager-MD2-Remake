@@ -19,7 +19,7 @@ public class FinalValuable {
     //自动安装要验证的List文件
     public static List<String> statueList = new ArrayList<>();
     public static String ICCNUrl = "https://adodoz.cn/";
-    public static String ICHhzUrl = "http://www.innercorehhz.cf/";
+    public static String ICHhzUrl = "https://dev.adodoz.cn/";
     public static String MODDir = null;
     public static String MCMAPDir = null;
     public static String ICMAPDir = null;

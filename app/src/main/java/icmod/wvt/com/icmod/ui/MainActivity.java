@@ -17,6 +17,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.StrictMode;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -40,7 +41,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.transition.MaterialContainerTransformSharedElementCallback;
+import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback;
 import com.liulishuo.filedownloader.BaseDownloadTask;
 import com.liulishuo.filedownloader.FileDownloadLargeFileListener;
 import com.liulishuo.filedownloader.FileDownloadListener;
@@ -284,9 +285,7 @@ public class MainActivity extends AppCompatActivity {
             new MaterialAlertDialogBuilder(MainActivity.this)
                     .setTitle("警告")
                     .setMessage("检测到您未安装Minecraft国际版，不能正常进入InnerCore，是否跳转去下载伪装软件？（安装Minecraft原版需要卸载伪装）")
-                    .setNegativeButton("不用了", (dialogInterface, i) -> {
-
-                    })
+                    .setNegativeButton("不用了", null)
                     .setPositiveButton("去下载", (dialogInterface, i) -> {
                         Intent intent = new Intent(
                                 Intent.ACTION_VIEW,
@@ -323,15 +322,9 @@ public class MainActivity extends AppCompatActivity {
 
         drawer.addDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
-            public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
-
-            }
-
+            public void onDrawerSlide(@NonNull View drawerView, float slideOffset) { }
             @Override
-            public void onDrawerOpened(@NonNull View drawerView) {
-
-            }
-
+            public void onDrawerOpened(@NonNull View drawerView) { }
             @Override
             public void onDrawerClosed(@NonNull View drawerView) {
                 boolean user_first = setting.getBoolean("FIRST_CloseDrawer", true);
@@ -449,6 +442,7 @@ public class MainActivity extends AppCompatActivity {
                             FinalValuable.loadingFinishGw = true;
                             FinalValuable.loadingErrorGw = false;
                         }).start();
+                        Log.e("TAG", String.valueOf(FinalValuable.jsonArrayGw));
                     }
 
                     @Override
@@ -472,15 +466,16 @@ public class MainActivity extends AppCompatActivity {
         new Thread(() -> {
             try {
                 String ret2 = null;
-                ret2 = Algorithm.Post("", "http://www.innercorehhz.cf/alljson.php", MainActivity.this);
+                ret2 = Algorithm.Post("", "https://dev.adodoz.cn/api/mod/list", MainActivity.this);
+                Log.e("TAG", ret2);
                 try {
-                    FinalValuable.jsonArrayHhz = new JSONArray(ret2);
+                    FinalValuable.jsonArrayHhz = new JSONObject(ret2).getJSONArray("data");
                     Algorithm.writeFile(FinalValuable.NetModDataHhz, ret2);
                 } catch (Exception e) {
                     e.printStackTrace();
+                    FinalValuable.loadingErrorHhz = false;
+                    FinalValuable.loadingFinishHhz = true;
                 }
-                FinalValuable.loadingErrorHhz = false;
-                FinalValuable.loadingFinishHhz = true;
             } catch (Exception e) {
                 e.printStackTrace();
                 FinalValuable.loadingErrorHhz = true;

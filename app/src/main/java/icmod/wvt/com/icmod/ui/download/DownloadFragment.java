@@ -94,7 +94,6 @@ public class DownloadFragment extends Fragment {
                 @Override
                 public void run() {
                     try {
-//                        Thread.sleep(220);
                         //如果数据加载未完成
                         if (!FinalValuable.loadingFinishGw) {
                             //判断加载是否出错
@@ -161,9 +160,9 @@ public class DownloadFragment extends Fragment {
                                 new Thread(() -> {
                                     try {
                                         String ret2 = null;
-                                        ret2 = Algorithm.Post("", "http://www.innercorehhz.cf/alljson.php", mainActivity);
+                                        ret2 = Algorithm.Post("", "https://dev.adodoz.cn/api/mod/list", mainActivity);
                                         try {
-                                            FinalValuable.jsonArrayHhz = new JSONArray(ret2);
+                                            FinalValuable.jsonArrayHhz = new JSONObject(ret2).getJSONArray("data");
                                             Algorithm.writeFile(FinalValuable.NetModDataHhz, ret2);
                                         } catch (Exception e) {
                                             e.printStackTrace();
@@ -220,7 +219,7 @@ public class DownloadFragment extends Fragment {
                                         errorServer.add("官网源");
                                     }
 
-                                    if (FinalValuable.loadingFinishGw && FinalValuable.loadingFinishHhz){
+                                    if (true){
                                         mainActivity.runOnUiThread(new Runnable() {
                                             @Override
                                             public void run() {

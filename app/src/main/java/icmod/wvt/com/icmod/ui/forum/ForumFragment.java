@@ -99,8 +99,8 @@ public class ForumFragment extends Fragment {
 
         webView.setDownloadListener(new DownloadListener() {
             @Override
-            public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype, long contentLength) {
-                downloadBySystem(url, contentDisposition, mimetype);
+            public void onDownloadStart(String url, String userAgent, String contentDisposition, String mistype, long contentLength) {
+                downloadBySystem(url, contentDisposition, mistype);
                 Snackbar.make(rootLayout, "文件正在下载，具体信息详见状态栏", Snackbar.LENGTH_SHORT).show();
             }
         });
@@ -226,6 +226,7 @@ public class ForumFragment extends Fragment {
 //        request.setDestinationUri()
 //        request.setDestinationInExternalFilesDir()
         final DownloadManager downloadManager = (DownloadManager) getActivity().getSystemService(DOWNLOAD_SERVICE);
+
         // 添加一个下载任务
         long downloadId = downloadManager.enqueue(request);
     }

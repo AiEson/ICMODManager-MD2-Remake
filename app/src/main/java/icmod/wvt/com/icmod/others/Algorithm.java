@@ -172,6 +172,7 @@ public class Algorithm {
         while ((line = in.readLine()) != null) {
             buffer.append(line);
         }
+        Log.e("GET: " , buffer.toString());
         return buffer.toString();
     }
 

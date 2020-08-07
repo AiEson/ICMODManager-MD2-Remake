@@ -10,8 +10,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 
-import com.google.android.material.transition.MaterialContainerTransform;
-import com.google.android.material.transition.MaterialContainerTransformSharedElementCallback;
+
+import com.google.android.material.transition.platform.MaterialContainerTransform;
+import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback;
 
 import java.time.Duration;
 import java.util.Objects;

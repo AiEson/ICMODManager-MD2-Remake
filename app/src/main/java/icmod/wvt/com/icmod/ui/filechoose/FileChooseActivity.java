@@ -37,8 +37,8 @@ import androidx.vectordrawable.graphics.drawable.Animatable2Compat.AnimationCall
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.transition.MaterialContainerTransform;
-import com.google.android.material.transition.MaterialContainerTransformSharedElementCallback;
+import com.google.android.material.transition.platform.MaterialContainerTransform;
+import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback;
 
 import net.lingala.zip4j.ZipFile;
 
