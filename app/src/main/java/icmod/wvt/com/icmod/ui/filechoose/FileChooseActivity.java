@@ -61,6 +61,7 @@ import icmod.wvt.com.icmod.others.Algorithm;
 import icmod.wvt.com.icmod.others.CircleImageView;
 import icmod.wvt.com.icmod.others.FileChoose;
 import icmod.wvt.com.icmod.others.FinalValuable;
+import icmod.wvt.com.icmod.others.SuperInstallSystem;
 import icmod.wvt.com.icmod.ui.MainActivity;
 
 public class FileChooseActivity extends AppCompatActivity {
@@ -94,7 +95,7 @@ public class FileChooseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.filechoose_main);
         toolbar = findViewById(R.id.toolbar_dialog_fileChoose);
-        prefs = PreferenceManager.getDefaultSharedPreferences(this) ;
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
         toolbar.setSubtitle("test");
         listView = findViewById(R.id.dialog_fileChoose_listView);
         fab = findViewById(R.id.fabFileChooseActivity);
@@ -198,9 +199,9 @@ public class FileChooseActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-                    listFileChoose = Algorithm.orderByName(orderFile.toString(), true);
-                    nowFilePath = orderFile.toString();
-                    adapter1 = new FileChooseActivity.FileAdapter(FileChooseActivity.this, R.layout.file_item, listFileChoose, new File(nowFilePath), subTextView);
+                listFileChoose = Algorithm.orderByName(orderFile.toString(), true);
+                nowFilePath = orderFile.toString();
+                adapter1 = new FileChooseActivity.FileAdapter(FileChooseActivity.this, R.layout.file_item, listFileChoose, new File(nowFilePath), subTextView);
 
                 listView.setAdapter(adapter1);
                 if (!listViewPosition.isNull(nowFilePath)) {
@@ -217,67 +218,48 @@ public class FileChooseActivity extends AppCompatActivity {
                     progressDialog.setCancelable(false);
                     progressDialog.setMessage("正在为您自动安装...");
                     progressDialog.show();
-                    if (new ZipFile(orderFile).isValidZipFile()) {
-                        new Thread(() -> {
-                            while (true) {
-                                if (!progressDialog.isShowing()) break;
-                                try {
-                                    Thread.sleep(20);
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                }
-                                FileChooseActivity.this.runOnUiThread(() -> progressDialog.setMessage("正在为您自动安装...\n" + FinalValuable.installState));
-                            }
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (new ZipFile(orderFile).isValidZipFile()) {
+                                Thread tbTh = new Thread(() -> {
+                                    while (true) {
+                                        if (!progressDialog.isShowing()) break;
+                                        try {
+                                            Thread.sleep(20);
+                                        } catch (InterruptedException e) {
+                                            e.printStackTrace();
+                                        }
+                                        FileChooseActivity.this.runOnUiThread(() -> progressDialog.setMessage("正在为您自动安装...\n" + FinalValuable.installState));
+                                    }
 
-                        }).start();
-                        new Thread(() -> {
-                            int statue = Algorithm.autoInstall(orderFile.toString());
-                            switch (statue) {
-                                case FinalValuable.MOD:
-                                    createFlashFile();
+                                });
+                                tbTh.start();
+                                progressDialog.setOnDismissListener(dialogInterface -> tbTh.interrupt());
+                                new Thread(() -> {
+                                    String statue = new SuperInstallSystem().intall(orderFile.toString());
                                     FileChooseActivity.this.runOnUiThread(() -> {
                                         progressDialog.dismiss();
-                                        Toast.makeText(FileChooseActivity.this, "已自动安装为MOD", Toast.LENGTH_SHORT).show();
-                                        finishAfterTransition();
+                                        new MaterialAlertDialogBuilder(FileChooseActivity.this)
+                                                .setTitle("安装信息")
+                                                .setMessage(statue)
+                                                .setPositiveButton("关闭", (dialogInterface, i) -> finishAfterTransition()).setOnDismissListener(dialogInterface -> finishAfterTransition()).create().show();
+
                                     });
-                                    break;
-                                case FinalValuable.ICMAP:
-                                    createFlashFile();
-                                    FileChooseActivity.this.runOnUiThread(() -> {
+
+                                }).start();
+                            } else {
+                                FileChooseActivity.this.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
                                         progressDialog.dismiss();
-                                        Toast.makeText(FileChooseActivity.this, "已自动安装为IC地图，如需安装为MC地图请手动移动", Toast.LENGTH_SHORT).show();
-                                        finishAfterTransition();
-                                    });
-                                    break;
-                                case FinalValuable.ICRES:
-                                    createFlashFile();
-                                    FileChooseActivity.this.runOnUiThread(() -> {
-                                        progressDialog.dismiss();
-                                        Toast.makeText(FileChooseActivity.this, "已自动安装为材质", Toast.LENGTH_SHORT).show();
-                                        finishAfterTransition();
-                                    });
-                                    break;
-                                case FinalValuable.HZPACK:
-                                    createHorizonFlashFile();
-                                    FileChooseActivity.this.runOnUiThread(() -> {
-                                        progressDialog.dismiss();
-                                        Toast.makeText(FileChooseActivity.this, "已自动安装为Horizon包", Toast.LENGTH_SHORT).show();
-                                        finishAfterTransition();
-                                    });
-                                    break;
-                                case 0:
-                                    FileChooseActivity.this.runOnUiThread(() -> {
-                                        progressDialog.dismiss();
-                                        Toast.makeText(FileChooseActivity.this, "安装失败，不是MOD文件", Toast.LENGTH_SHORT).show();
-                                    });
-                                    break;
+                                        Toast.makeText(FileChooseActivity.this, "所选文件已损坏或不是MOD，请重新选择", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+
                             }
-                        }).start();
-                    } else {
-                        progressDialog.dismiss();
-                        Toast.makeText(FileChooseActivity.this, "所选文件已损坏或不是MOD，请重新选择", Toast.LENGTH_SHORT).show();
-                    }
-                } else {
+                        }
+                    }).start();
 
                 }
             }
@@ -310,59 +292,22 @@ public class FileChooseActivity extends AppCompatActivity {
                 }
             }).start();
             new Thread(() -> {
+                StringBuffer sb = new StringBuffer();
                 chooseFile = getItemWithoutRepeat(chooseFile);
                 for (int i = 0; i < chooseFile.size(); i++) {
+                    SuperInstallSystem sis = new SuperInstallSystem();
                     int finalI = i;
                     num[0] = i;
                     File orderFile = chooseFile.get(i);
                     Log.e("File", orderFile.toString());
-                    int statue = Algorithm.autoInstall(orderFile.toString());
-                    switch (statue) {
-                        case FinalValuable.MOD:
-                            createFlashFile();
-                            if (mod[0].equals("无")) {
-                                mod[0] = orderFile.getName();
-                            } else {
-                                mod[0] += "\n" + orderFile.getName();
-                            }
-                            break;
-                        case FinalValuable.ICMAP:
-                            createFlashFile();
-                            if (map[0].equals("无")) {
-                                map[0] = orderFile.getName();
-                            } else {
-                                map[0] += "\n" + orderFile.getName();
-                            }
-                            break;
-                        case FinalValuable.ICRES:
-                            createFlashFile();
-                            if (res[0].equals("无")) {
-                                res[0] = orderFile.getName();
-                            } else {
-                                res[0] += "\n" + orderFile.getName();
-                            }
-                            break;
-                        case FinalValuable.HZPACK:
-                            createFlashFile();
-                            if (pack[0].equals("无")) {
-                                pack[0] = orderFile.getName();
-                            } else {
-                                pack[0] += "\n" + orderFile.getName();
-                            }
-                            break;
-                        case 0:
-                            if (none[0].equals("无")) {
-                                none[0] = orderFile.getName();
-                            } else {
-                                none[0] += "\n" + orderFile.getName();
-                            }
-                            break;
-                    }
+                    String statue = sis.intall(orderFile.toString());
+                    FinalValuable.clearSIS();
+                    sb.append(orderFile.getName()).append("：\n\t\t").append(statue.replaceAll("\n", "\n\t\t")).append("\n");
                 }
                 this.runOnUiThread(() -> {
                     progressDialog.dismiss();
                     new MaterialAlertDialogBuilder(FileChooseActivity.this).setTitle("安装统计信息")
-                            .setMessage("MOD：\n" + mod[0] + "\n\nHorizon包\n" + pack[0] + "\n\nIC地图：\n" + map[0] + "\n\n材质包：\n" + res[0] + "\n\n安装失败：\n" + none[0])
+                            .setMessage(sb.toString())
                             .setPositiveButton("关闭", (dialog, which) -> finishAfterTransition())
                             .setOnDismissListener(dialog -> finishAfterTransition())
                             .create().show();
@@ -397,6 +342,7 @@ public class FileChooseActivity extends AppCompatActivity {
             }
         }
     }
+
     private void createHorizonFlashFile() {
         File flashFile = new File(FinalValuable.flashHorizonData);
         if (!flashFile.exists()) {
@@ -530,7 +476,7 @@ public class FileChooseActivity extends AppCompatActivity {
 
             viewHolder.addTab.setOnClickListener(v -> new MaterialAlertDialogBuilder(FileChooseActivity.this)
                     .setTitle("添加快捷标签")
-                    .setMessage("是否将此文件夹（" + fileChoose.getName() +"）添加进顶部快捷标签？")
+                    .setMessage("是否将此文件夹（" + fileChoose.getName() + "）添加进顶部快捷标签？")
                     .setNegativeButton("取消", null)
                     .setPositiveButton("确定", (dialog, which) -> {
                         final EditText editText = new EditText(FileChooseActivity.this);
@@ -566,7 +512,7 @@ public class FileChooseActivity extends AppCompatActivity {
                                     }).start();
 
                                 })
-                                .setNegativeButton("取消",null).create().show();
+                                .setNegativeButton("取消", null).create().show();
                     }).create().show());
 
             return view;

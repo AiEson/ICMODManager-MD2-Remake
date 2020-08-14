@@ -61,4 +61,17 @@ public class FinalValuable {
     public static String chooseFolderName = null;
     //在线安装Hz包界面的AlertDialog
     public static AlertDialog alertDialog = null;
+    //SuperInstallSystem类的一些变量
+    public static List<String> globalList = new ArrayList<>();
+    public static List<String> mods = new ArrayList<>();
+    public static List<String> maps = new ArrayList<>();
+    public static List<String> hzPacks = new ArrayList<>();
+    public static List<String> resPacks = new ArrayList<>();
+    public static void clearSIS() {
+        globalList.clear();
+        mods.clear();
+        maps.clear();
+        hzPacks.clear();
+        resPacks.clear();
+    }
 }

@@ -3,6 +3,7 @@ package icmod.wvt.com.icmod.ui.forum;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.DownloadManager;
+import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -14,6 +15,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.CookieManager;
 import android.webkit.DownloadListener;
 import android.webkit.URLUtil;
 import android.webkit.ValueCallback;
@@ -23,6 +25,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -31,8 +34,14 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.baoyz.widget.PullRefreshLayout;
 import com.google.android.material.snackbar.Snackbar;
+import com.liulishuo.filedownloader.BaseDownloadTask;
+import com.liulishuo.filedownloader.FileDownloadLargeFileListener;
+import com.liulishuo.filedownloader.FileDownloader;
+
+import java.io.File;
 
 import icmod.wvt.com.icmod.R;
+import icmod.wvt.com.icmod.others.Algorithm;
 import icmod.wvt.com.icmod.ui.MainActivity;
 
 import static android.app.Activity.RESULT_OK;
@@ -66,7 +75,7 @@ public class ForumFragment extends Fragment {
         webView.getSettings().setJavaScriptEnabled(true); // Enable JavaScript Support
         webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
         webView.getSettings().setDomStorageEnabled(true);
-        webView.getSettings().setUserAgentString("-APP"); // Custom User Agent
+//        webView.getSettings().setUserAgentString("-APP"); // Custom User Agent
         webView.setBackgroundColor(getResources().getColor(R.color.white));
         webView.setWebChromeClient(new WebChromeClient());
         webView.setWebViewClient(new WebViewClient());
@@ -99,9 +108,23 @@ public class ForumFragment extends Fragment {
 
         webView.setDownloadListener(new DownloadListener() {
             @Override
-            public void onDownloadStart(String url, String userAgent, String contentDisposition, String mistype, long contentLength) {
-                downloadBySystem(url, contentDisposition, mistype);
-                Snackbar.make(rootLayout, "文件正在下载，具体信息详见状态栏", Snackbar.LENGTH_SHORT).show();
+            public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimeType, long contentLength) {
+                DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
+
+                request.setMimeType(mimeType);
+                //------------------------COOKIE!!------------------------
+                String cookies = CookieManager.getInstance().getCookie(url);
+                request.addRequestHeader("cookie", cookies);
+                //------------------------COOKIE!!------------------------
+                request.addRequestHeader("User-Agent", userAgent);
+                request.setDescription("正在下载...");
+                request.setTitle(URLUtil.guessFileName(url, contentDisposition, mimeType));
+                request.allowScanningByMediaScanner();
+                request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+                request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, URLUtil.guessFileName(url, contentDisposition, mimeType));
+                DownloadManager dm = (DownloadManager) getActivity().getSystemService(DOWNLOAD_SERVICE);
+                dm.enqueue(request);
+                Snackbar.make(rootLayout, "正在下载文件，进度请查看状态栏", Snackbar.LENGTH_SHORT).show();
             }
         });
         webView.setWebViewClient(new WebViewClient(){

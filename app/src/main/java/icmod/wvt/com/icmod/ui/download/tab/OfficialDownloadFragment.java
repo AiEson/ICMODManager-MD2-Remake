@@ -44,6 +44,7 @@ import icmod.wvt.com.icmod.others.Algorithm;
 import icmod.wvt.com.icmod.others.FinalValuable;
 import icmod.wvt.com.icmod.others.MOD;
 import icmod.wvt.com.icmod.others.OnlineMOD;
+import icmod.wvt.com.icmod.others.SuperInstallSystem;
 import icmod.wvt.com.icmod.ui.MainActivity;
 
 import static icmod.wvt.com.icmod.ui.MainActivity.print;
@@ -240,7 +241,7 @@ public class OfficialDownloadFragment extends Fragment {
                             @Override
                             protected void completed(BaseDownloadTask task) {
                                 new Thread(() -> {
-                                    if (Algorithm.autoInstall(FinalValuable.DownLoadPath + File.separator + getItem(position).getName() + ".icmod") != 0) {
+                                    if (!new SuperInstallSystem().intall(FinalValuable.DownLoadPath + File.separator + getItem(position).getName() + ".icmod").equals("")) {
                                         mainActivity.runOnUiThread(new Runnable() {
                                             @Override
                                             public void run() {

@@ -93,6 +93,7 @@ import icmod.wvt.com.icmod.others.Algorithm;
 import icmod.wvt.com.icmod.others.FinalValuable;
 import icmod.wvt.com.icmod.others.HorizonPack;
 import icmod.wvt.com.icmod.others.LruCacheUtils;
+import icmod.wvt.com.icmod.others.SuperInstallSystem;
 import icmod.wvt.com.icmod.ui.download.DownloadFragment;
 import icmod.wvt.com.icmod.ui.filechoose.FileChooseActivity;
 import icmod.wvt.com.icmod.ui.forum.ForumFragment;
@@ -296,21 +297,6 @@ public class MainActivity extends AppCompatActivity {
                     })
                     .create().show();
         }
-//        if (!Algorithm.isAvailable(MainActivity.this, "com.zhekasmirnov.innercore")) {
-//            new MaterialAlertDialogBuilder(MainActivity.this)
-//                    .setTitle("警告")
-//                    .setMessage("检测到您未安装InnerCore主程序，是否跳转去下载主程序？")
-//                    .setNegativeButton("不用了", null)
-//                    .setPositiveButton("去下载", (dialogInterface, i) -> {
-//                        Intent intent = new Intent(
-//                                Intent.ACTION_VIEW,
-//                                Uri.parse("https://www.coolapk.com/game/com.zhekasmirnov.innercore")
-//                        );
-//                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                        startActivity(intent);
-//                    })
-//                    .create().show();
-//        }
         setting = getSharedPreferences(SHARE_APP_TAG, 0);
         boolean user_first = setting.getBoolean("FIRST", true);
 
@@ -482,6 +468,7 @@ public class MainActivity extends AppCompatActivity {
                 FinalValuable.loadingFinishHhz = false;
             }
         }).start();
+
     }
 
 
@@ -1040,9 +1027,7 @@ public class MainActivity extends AppCompatActivity {
                                                                                                                     }
                                                                                                                 }).start();
                                                                                                                 new Thread(() -> {
-                                                                                                                    int statue = Algorithm.autoInstall(FinalValuable.DownLoadPath + File.separator + folderName + ".zip");
-                                                                                                                    switch (statue) {
-                                                                                                                        case FinalValuable.HZPACK:
+                                                                                                                    String statue = new SuperInstallSystem().intall(FinalValuable.DownLoadPath + File.separator + folderName + ".zip");
                                                                                                                             createHorizonFlashFile();
                                                                                                                             MainActivity.this.runOnUiThread(() -> {
                                                                                                                                 progressDialog1.dismiss();
@@ -1050,8 +1035,6 @@ public class MainActivity extends AppCompatActivity {
                                                                                                                                 createHorizonFlashFile();
                                                                                                                                 onResume();
                                                                                                                             });
-                                                                                                                            break;
-                                                                                                                    }
                                                                                                                 }).start();
                                                                                                             });
                                                                                                         }).start();
